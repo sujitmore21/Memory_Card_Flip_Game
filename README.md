@@ -50,7 +50,7 @@ lib/
 
 - Flutter SDK (3.8.1 or higher)
 - Dart SDK
-- IDE (VS Code, Android Studio, or Cursor)
+- IDE (VS Code, Android Studio)
 
 ### Installation
 
