@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'card_model.dart';
 import 'package:flutter/material.dart';
+import 'package:vibration/vibration.dart';
 
 class GameState extends ChangeNotifier {
   List<CardModel> cards = [];
@@ -77,6 +78,13 @@ class GameState extends ChangeNotifier {
     if (gameStarted == false) {
       startGame();
     }
+
+    // Vibrate on card flip
+    Vibration.hasVibrator().then((hasVibrator) {
+      if (hasVibrator) {
+        Vibration.vibrate(duration: 50);
+      }
+    });
 
     cards[index] = cards[index].copyWith(isFlipped: true);
 
