@@ -3,6 +3,8 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    // Add Google Services plugin for Firebase (uncomment after running flutterfire configure)
+    // id("com.google.gms.google-services")
 }
 
 // Load keystore properties

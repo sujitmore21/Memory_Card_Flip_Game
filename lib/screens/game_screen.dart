@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/game_state.dart';
+import '../models/multiplayer_game_state.dart';
 import '../widgets/memory_card.dart';
 import '../widgets/game_complete_dialog.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  final bool isMultiplayer;
+  const GameScreen({super.key, this.isMultiplayer = false});
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -68,6 +70,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final isMultiplayer = widget.isMultiplayer;
     return Consumer<GameState>(
       builder: (context, gameState, child) {
         return Container(
@@ -111,6 +114,54 @@ class _GameScreenState extends State<GameScreen> {
                 ],
               ),
               const SizedBox(height: 24),
+              // Multiplayer turn indicator
+              if (isMultiplayer)
+                Consumer<MultiplayerGameState>(
+                  builder: (context, mpState, child) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: mpState.isMyTurn
+                            ? Colors.green.withOpacity(0.3)
+                            : Colors.grey.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: mpState.isMyTurn
+                              ? Colors.green
+                              : Colors.grey.shade600,
+                          width: 2,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            mpState.isMyTurn
+                                ? Icons.play_circle
+                                : Icons.pause_circle,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            mpState.isMyTurn
+                                ? 'Your Turn'
+                                : 'Waiting for opponent...',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               // Stats
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,36 +192,38 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              // New Game Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: gameState.resetGame,
-                  icon: const Icon(Icons.refresh_rounded, size: 22),
-                  label: const Text(
-                    'New Game',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
+              if (!isMultiplayer) ...[
+                const SizedBox(height: 20),
+                // New Game Button (only for single player)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: gameState.resetGame,
+                    icon: const Icon(Icons.refresh_rounded, size: 22),
+                    label: const Text(
+                      'New Game',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.5,
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepPurple.shade700,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 16,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.deepPurple.shade700,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 8,
+                      shadowColor: Colors.black.withOpacity(0.3),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 8,
-                    shadowColor: Colors.black.withOpacity(0.3),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         );

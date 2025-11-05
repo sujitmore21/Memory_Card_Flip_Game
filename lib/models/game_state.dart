@@ -30,10 +30,10 @@ class GameState extends ChangeNotifier {
   ];
 
   GameState() {
-    _initializeGame();
+    initializeGame();
   }
 
-  void _initializeGame() {
+  void initializeGame() {
     // Create pairs of cards with icons
     final List<IconData> selectedIcons = _icons.take(8).toList();
     final List<CardModel> newCards = [];
@@ -93,13 +93,13 @@ class GameState extends ChangeNotifier {
     } else if (secondCardIndex == null) {
       secondCardIndex = index;
       moves++;
-      _checkMatch();
+      checkMatch();
     }
 
     notifyListeners();
   }
 
-  void _checkMatch() {
+  void checkMatch() {
     if (firstCardIndex == null || secondCardIndex == null) return;
 
     final firstCard = cards[firstCardIndex!];
@@ -112,11 +112,11 @@ class GameState extends ChangeNotifier {
         isMatched: true,
       );
       score += 10;
-      _resetSelection();
+      resetSelection();
 
       // Check if game is won
-      if (_isGameComplete()) {
-        _endGame();
+      if (isGameComplete()) {
+        endGame();
       }
     } else {
       // No match, flip back
@@ -128,23 +128,23 @@ class GameState extends ChangeNotifier {
         cards[secondCardIndex!] = cards[secondCardIndex!].copyWith(
           isFlipped: false,
         );
-        _resetSelection();
+        resetSelection();
         canFlip = true;
         notifyListeners();
       });
     }
   }
 
-  void _resetSelection() {
+  void resetSelection() {
     firstCardIndex = null;
     secondCardIndex = null;
   }
 
-  bool _isGameComplete() {
+  bool isGameComplete() {
     return cards.every((card) => card.isMatched);
   }
 
-  void _endGame() {
+  void endGame() {
     timer?.cancel();
     gameWon = true;
     notifyListeners();
@@ -152,11 +152,11 @@ class GameState extends ChangeNotifier {
 
   void resetGame() {
     timer?.cancel();
-    _resetSelection();
+    resetSelection();
     canFlip = true;
     gameStarted = false;
     gameWon = false;
-    _initializeGame();
+    initializeGame();
   }
 
   String get formattedDuration {

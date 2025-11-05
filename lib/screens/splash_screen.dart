@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'game_screen.dart';
+import 'mode_selection_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,11 +13,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to game screen after 2.5 seconds
+    // Navigate to mode selection after 2.5 seconds
     Future.delayed(const Duration(seconds: 2, milliseconds: 500), () {
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const GameScreen()),
+          MaterialPageRoute(builder: (context) => const ModeSelectionScreen()),
         );
       }
     });
